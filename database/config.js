@@ -6,4 +6,9 @@ config.tables.push({
   columns : ['name']
 });
 
+config.tables.push({
+  name: 'users',
+  columns : ['name','taxrate']
+});
+
 module.exports = config;

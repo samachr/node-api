@@ -1,0 +1,19 @@
+<!doctype html>
+<html ng-app="rest-browser">
+
+<head>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <div class="list-group" ng-controller="endpointsController">
+    <a ng-repeat="endpoint in endpoints" class="list-group-item" href="{{endpoint}}">{{endpoint}}</a>
+  </div>
+
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.js"></script>
+  <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.13.0.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>

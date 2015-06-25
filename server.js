@@ -6,6 +6,7 @@ var express    = require('express');
 var bodyParser = require('body-parser');
 var app        = express();
 var morgan     = require('morgan');
+var path       = require('path');
 
 // configure app
 app.use(morgan('dev')); // log requests to the console
@@ -39,6 +40,8 @@ router.get('/', function(req, res) {
 });
 
 app.use('/api', router);
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 // START THE SERVER
 // =============================================================================
