@@ -1,6 +1,6 @@
 # Instant Rest API
 
-thanks to sevilayha for basic boilerplate
+thanks to scotch.io for basic boilerplate
 
 ## Requirements
 
