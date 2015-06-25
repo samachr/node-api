@@ -1,8 +1,6 @@
-# Building a RESTful API in Node and Express
+# Instant Rest API
 
-Using the new Express 4.0 Router to build an API
-
-[Read the tutorial](http://scotch.io/tutorials/javascript/build-a-restful-api-using-node-and-express-4)
+thanks to sevilayha for basic boilerplate
 
 ## Requirements
 
@@ -10,7 +8,7 @@ Using the new Express 4.0 Router to build an API
 
 ## Installation
 
-- Clone the repo: `git clone git@github.com:scotch-io/node-api`
+- Clone the repo: `git clone git@github.com:samachr/node-api.git`
 - Install dependencies: `npm install`
 - Start the server: `node server.js`
 

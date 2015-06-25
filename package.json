@@ -1,18 +1,19 @@
 {
-  "name": "dropo-api",
+  "name": "instant-rest-api",
   "main": "server.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/scotch-io/node-token-authentication"
+    "url": "https://github.com/samachr/node-api"
   },
   "scripts": {
     "start": "node server.js"
   },
-  "author": "Chris Sevilleja <scotch.io>",
+  "author": "Samuel Christensen",
   "license": "MIT",
   "dependencies": {
     "express": "~4.0.0",
     "morgan": "~1.0.0",
-    "body-parser": "~1.0.1"
+    "body-parser": "~1.0.1",
+    "sqlite3": "~3.0.8"
   }
 }
