@@ -36,7 +36,7 @@ router.use(function(req, res, next) {
 });
 
 router.get('/', function(req, res) {
-	res.json({ message: 'Welcome to the api!', links: dbconfig.tables.map(function(table){return '/api/' + table.name})});
+	res.json({ message: 'Welcome to the api!', endpoints: dbconfig.tables.map(function(table){return '/api/' + table.name})});
 });
 
 app.use('/api', router);

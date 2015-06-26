@@ -7,8 +7,17 @@
 
 <body>
 
-  <div class="list-group" ng-controller="endpointsController">
-    <a ng-repeat="endpoint in endpoints" class="list-group-item" href="{{endpoint}}">{{endpoint}}</a>
+  <div ng-controller="endpointsController">
+    <div class="list-group">
+      <div ng-repeat="endpoint in simpleEndpointsLising" ng-click="getListing(endpoint)" class="list-group-item">
+        <a href="{{endpoint}}">{{endpoint}}</a>
+        <ul>
+          <li ng-repeat="row in endpoints[endpoint].data">
+            {{row}}
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
 
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.js"></script>
