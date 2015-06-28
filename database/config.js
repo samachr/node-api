@@ -11,4 +11,14 @@ config.tables.push({
   columns : ['name','taxrate']
 });
 
+config.tables.push({
+	name: 'dropped',
+	columns:['username', 'lat', 'lon', 'timestamp','lat_r', 'lon_r', 'headline']
+});
+
+config.tables.push({
+	name: 'user',
+	columns:['username', 'password', 'name', 'email', 'mobile', 'join_date', 'reputation']
+});
+
 module.exports = config;
