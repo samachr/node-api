@@ -3,7 +3,7 @@
 var sqlite3 = require('sqlite3').verbose();
 var dbdir = './';
 
-if(process.env.OPENSHIFT_DATA_DIR) {
+if (process.env.OPENSHIFT_DATA_DIR) {
   var db = new sqlite3.Database(process.env.OPENSHIFT_DATA_DIR + "rest.db");
 } else {
   var db = new sqlite3.Database(':memory:');
@@ -29,10 +29,9 @@ db.serialize(function() {
 
   db.run("INSERT INTO users (name, taxrate) VALUES (?, ?)", "Bear User", 5.5);
 
-  db.run("INSERT INTO dropped (username, lat, lon, timestamp, lat_r, lon_r, headline) VALUES (?,?,?,?,?,?,?)","kyle",40.635958500,-111.8083391,"2015-06-26 12:50:07",0.709231270528,-1.951423648,"hello");
+  db.run("INSERT INTO dropped (username, lat, lon, timestamp, lat_r, lon_r, headline) VALUES (?,?,?,?,?,?,?)", "kyle", 40.635958500, -111.8083391, "2015-06-26 12:50:07", 0.709231270528, -1.951423648, "hello");
 
-  db.run("INSERT INTO user (username, password, name, email, mobile, join_date, reputation) VALUES (?,?,?,?,?,?,?)","kyle","d7b47bfa1e25cd2de6142522d486b2fb4c818598c090ccd4ef5c6ba415aa7846ca4da04decbdbf04","Kyle Carter ","kyle@kyle.com","samsung!","2015-04-09 00:00:00", 100);
+  db.run("INSERT INTO user (username, password, name, email, mobile, join_date, reputation) VALUES (?,?,?,?,?,?,?)", "kyle", "d7b47bfa1e25cd2de6142522d486b2fb4c818598c090ccd4ef5c6ba415aa7846ca4da04decbdbf04", "Kyle Carter ", "kyle@kyle.com", "samsung!", "2015-04-09 00:00:00", 100);
 });
-
 
 module.exports = db;
