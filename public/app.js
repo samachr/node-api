@@ -1,30 +1,38 @@
 angular.module('rest-browser', ['ui.bootstrap']);
 
-angular.module('rest-browser').controller('endpointsController', function($scope, $window, $http) {
+angular.module('rest-browser').controller('endpointsController', function($scope, $window, $http, $timeout) {
   $scope.endpoints = [];
   $scope.responses = [];
   $scope.simpleEndpointsLising = [];
+  $scope.webAuthToken = '';
 
-
-  $http.get('/api').
+  $http.post('/api/auth', {
+    username: 'kyle',
+    password: 'd7b47bfa1e25cd2de6142522d486b2fb4c818598c090ccd4ef5c6ba415aa7846ca4da04decbdbf04'
+  }).
   success(function(data, status, headers, config) {
-    data.endpoints.forEach(function(endpoint) {
-      $scope.endpoints[endpoint] = {url: endpoint, data: []};
-      $scope.simpleEndpointsLising.push(endpoint);
-    })
-      // console.log($scope.endpoints);
+    console.log(data);
+    $scope.webAuthToken = data.token;
+    $http.get('/api?token=' + $scope.webAuthToken).
+    success(function(data, status, headers, config) {
+      data.endpoints.forEach(function(endpoint) {
+        $scope.endpoints[endpoint] = {
+          url: endpoint,
+          data: []
+        };
+        $scope.simpleEndpointsLising.push(endpoint);
+      })
+    });
   });
-
-
 
   $scope.getListing = function(endpoint) {
     $http.get(endpoint).
     success(function(data, status, headers, config) {
       $scope.endpoints[endpoint].data = [];
       data.forEach(function(data) {
-        $scope.endpoints[endpoint].data.push(data);
-      })
-      // console.log($scope.endpoints[endpoint]);
+          $scope.endpoints[endpoint].data.push(data);
+        })
+        // console.log($scope.endpoints[endpoint]);
     });
   }
 

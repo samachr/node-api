@@ -9,7 +9,6 @@
     "start": "node server.js"
   },
   "author": "Samuel Christensen",
-  "license": "MIT",
   "dependencies": {
     "body-parser": "~1.0.1",
     "express": "~4.0.0",

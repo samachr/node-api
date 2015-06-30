@@ -2,7 +2,12 @@
 
 var sqlite3 = require('sqlite3').verbose();
 var dbdir = './';
-var db = new sqlite3.Database(':memory:');
+
+if(process.env.OPENSHIFT_DATA_DIR) {
+  var db = new sqlite3.Database(process.env.OPENSHIFT_DATA_DIR + "rest.db");
+} else {
+  var db = new sqlite3.Database(':memory:');
+}
 var dbconfig = require('./config.js');
 
 db.run("CREATE TABLE IF NOT EXISTS bears (id INTEGER PRIMARY KEY, name TEXT)");
@@ -23,7 +28,6 @@ db.serialize(function() {
 
 
   db.run("INSERT INTO users (name, taxrate) VALUES (?, ?)", "Bear User", 5.5);
-
 
   db.run("INSERT INTO dropped (username, lat, lon, timestamp, lat_r, lon_r, headline) VALUES (?,?,?,?,?,?,?)","kyle",40.635958500,-111.8083391,"2015-06-26 12:50:07",0.709231270528,-1.951423648,"hello");
 
