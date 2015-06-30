@@ -19,6 +19,16 @@ module.exports = function (table, columns) {
     });
   });
 
+  router.get('/columns', function(req, res, next) {
+    var tempColumns = [];
+    tempColumns.push('ID');
+    columns.forEach(function(column){
+      tempColumns.push(column);
+    });
+    console.log(tempColumns);
+    res.json(tempColumns);
+  });
+
   router.post('/', function(req, res, next) {
     db.run(SQLPostStatement, columns.map(function(column){return req.body[column]}), function(err) {
       if(err) {
