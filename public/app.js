@@ -9,6 +9,13 @@ app.controller('endpointsController', function($scope, $window, $http, $timeout)
   $scope.progress = 10;
   $scope.new = {};
 
+  $scope.chartLabels = ["January", "February", "March", "April", "May", "June", "July"];
+  $scope.chartSeries = ['Series A', 'Series B'];
+  $scope.chartData = [
+    [65, 59, 80, 81, 56, 55, 40],
+    [28, 48, 40, 19, 86, 27, 90]
+  ];
+
   $http.post('/api/auth', {
     username: 'kyle',
     password: 'd7b47bfa1e25cd2de6142522d486b2fb4c818598c090ccd4ef5c6ba415aa7846ca4da04decbdbf04'

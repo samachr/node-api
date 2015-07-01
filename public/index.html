@@ -3,6 +3,7 @@
 
 <head>
   <link href="./lib/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="./lib/angular-chart.css">
   <link href="./index.css" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
@@ -12,6 +13,7 @@
   <div ng-controller="endpointsController">
     <progressbar value="progress"></progressbar>
     <div class="form-inline text-center">
+
       <label for="apiselect">Endpoint:</label>
       <select id="apiselect" class="form-control" ng-model="selectedEndpoint" ng-change="getListing(selectedEndpoint)">
         <option ng-repeat="endpoint in simpleEndpointsLising" value="{{endpoint}}">{{endpoint}}</option>
@@ -34,6 +36,13 @@
         <input id="search" type="text" class="search-query" ng-model="filterString" ng-change="currentPage=0">
       </div>
     </div>
+    
+    <div>
+      <canvas id="line" class="chart chart-line" data="chartData"
+        labels="chartLabels" legend="true" series="chartSeries">
+      </canvas>
+    </div>
+
     <table class="table table-striped">
       <thead>
         <tr>
@@ -70,8 +79,10 @@
   // <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.13.0.min.js"></script>
   // <script src="http://code.angularjs.org/1.2.2/angular-animate.min.js"></script> -->
   <script src="./lib/angular.min.js"></script>
+  <script src="./lib/Chart.min.js"></script>
   <script src="./lib/ui-bootstrap-tpls-0.13.0.min.js"></script>
   <script src="./lib/angular-animate.min.js"></script>
+  <script src="./lib/angular-chart.min.js"></script>
   <script src="app.js"></script>
 </body>
 
