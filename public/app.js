@@ -1,4 +1,4 @@
-var app = angular.module('rest-browser', ['ui.bootstrap']);
+var app = angular.module('rest-browser', ['ui.bootstrap', 'ngAnimate']);
 
 app.controller('endpointsController', function($scope, $window, $http, $timeout) {
   $scope.endpoints = [];
@@ -38,22 +38,23 @@ app.controller('endpointsController', function($scope, $window, $http, $timeout)
   $scope.getListing = function(endpoint) {
     $scope.new = {};
     $scope.progress = 0;
-    $http.get(endpoint).
-    success(function(data, status, headers, config) {
-      $scope.endpoints[endpoint].data = [];
-      data.forEach(function(data) {
-          $scope.progress += 90/data.length;
-          $scope.endpoints[endpoint].data.push(data);
-        })
-        // console.log($scope.endpoints[endpoint]);
-    });
-    $http.get(endpoint+'/columns').
+    $scope.currentPage = 0;
+    $http.get(endpoint + '/columns').
     success(function(data, status, headers, config) {
       // $scope.progress += 40;
       $scope.endpoints[endpoint].columns = [];
       data.forEach(function(data) {
           $scope.new[data] = "";
           $scope.endpoints[endpoint].columns.push(data);
+        })
+        // console.log($scope.endpoints[endpoint]);
+    });
+    $http.get(endpoint).
+    success(function(data, status, headers, config) {
+      $scope.endpoints[endpoint].data = [];
+      data.forEach(function(data) {
+          $scope.progress += 90 / data.length;
+          $scope.endpoints[endpoint].data.push(data);
         })
         // console.log($scope.endpoints[endpoint]);
     });
@@ -78,20 +79,80 @@ app.controller('endpointsController', function($scope, $window, $http, $timeout)
     });
   }
 
+  $scope.itemsPerPage = 10;
+  $scope.currentPage = 0;
+
+  // $scope.items = [];
+  //
+  // for (var i = 0; i < 50; i++) {
+  //   $scope.items.push({
+  //     id: i,
+  //     name: "name " + i,
+  //     description: "description " + i
+  //   });
+  // }
+
+  $scope.range = function() {
+    var rangeSize = 5;
+    var ret = [];
+    var start;
+
+    start = $scope.currentPage;
+    if ( start > $scope.pageCount()-rangeSize ) {
+      start = $scope.pageCount()-rangeSize+1;
+    }
+
+    for (var i=start; i<start+rangeSize; i++) {
+      ret.push(i);
+    }
+    return ret;
+  };
+
+  $scope.prevPage = function() {
+    if ($scope.currentPage > 0) {
+      $scope.currentPage--;
+    }
+  };
+
+  $scope.prevPageDisabled = function() {
+    return $scope.currentPage === 0 ? "disabled" : "";
+  };
+
+  $scope.pageCount = function() {
+    return Math.ceil($scope.endpoints[$scope.selectedEndpoint].data.length / $scope.itemsPerPage) - 1;
+  };
+
+  $scope.nextPage = function() {
+    if ($scope.currentPage < $scope.pageCount()) {
+      $scope.currentPage++;
+    }
+  };
+
+  $scope.nextPageDisabled = function() {
+    return $scope.currentPage === $scope.pageCount() ? "disabled" : "";
+  };
+
 });
 
 /*
 This directive allows us to pass a function in on an enter key to do what we want.
  */
-app.directive('ngEnter', function () {
-    return function (scope, element, attrs) {
-        element.bind("keydown keypress", function (event) {
-            if(event.which === 13) {
-                scope.$apply(function (){
-                    scope.$eval(attrs.ngEnter);
-                });
-                event.preventDefault();
-            }
+app.directive('ngEnter', function() {
+  return function(scope, element, attrs) {
+    element.bind("keydown keypress", function(event) {
+      if (event.which === 13) {
+        scope.$apply(function() {
+          scope.$eval(attrs.ngEnter);
         });
-    };
+        event.preventDefault();
+      }
+    });
+  };
+});
+
+app.filter('offset', function() {
+  return function(input, start) {
+    start = parseInt(start, 10);
+    return input.slice(start);
+  };
 });
