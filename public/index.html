@@ -3,11 +3,13 @@
 
 <head>
   <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+  <link href="./index.css" rel="stylesheet">
 </head>
 
 <body>
 
   <div ng-controller="endpointsController">
+    <progressbar value="progress"></progressbar>
     <div>
       <select class="form-control" ng-model="selectedEndpoint" ng-change="getListing(selectedEndpoint)">
         <option ng-repeat="endpoint in simpleEndpointsLising" value="{{endpoint}}"> {{endpoint}}
@@ -29,42 +31,22 @@
         <tbody>
           <tr>
             <td ng-repeat="(key, value) in endpoints[selectedEndpoint].data[0]">
-              <input type="{{key}}" class="form-control" id="email">
+              <input type="{{key}}" class="form-control" id="{{key}}" ng-model="new[key]">
             </td>
             <td>
-              <button type="submit" class="btn btn-default">Add</button>
+              <button type="submit" ng-click="postListing()" class="btn btn-default">Add</button>
             </td>
           </tr>
-          <tr ng-repeat="row in endpoints[selectedEndpoint].data">
+          <tr ng-animate="'animate'" ng-enter="putListing(row)" ng-repeat="row in endpoints[selectedEndpoint].data">
             <td ng-repeat="(key, value) in row">
-              <input type="{{key}}" class="form-control" id="email" value="{{value}}">
+              <input type="{{key}}" class="form-control" id="email" ng-model="row[key]">
             </td>
             <td>
-              <button type="submit" class="btn btn-default">Update</button>
+              <button type="submit" ng-click="putListing(row)" class="btn btn-default">Update</button>
             </td>
           </tr>
         </tbody>
       </table>
-      <!-- <div class="list-group-item" ng-repeat="row in endpoints[selectedEndpoint].data">
-        <form class="form-inline" role="form">
-          <div class="form-group" ng-repeat="(key, value) in row">
-            <label for="{{key}}">{{key}}:</label>
-            <input type="{{key}}" class="form-control" id="email" value="{{value}}">
-          </div>
-          <button type="submit" class="btn btn-default">Update</button>
-        </form>
-      </div> -->
-    <!-- </div> -->
-    <!-- <div class="list-group">
-      <div ng-repeat="endpoint in simpleEndpointsLising" ng-click="getListing(endpoint)" class="list-group-item">
-        <a href="{{endpoint}}">{{endpoint}}</a>
-        <ul>
-          <li ng-repeat="row in endpoints[endpoint].data">
-            {{row}}
-          </li>
-        </ul>
-      </div>
-    </div> -->
   </div>
 
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.js"></script>

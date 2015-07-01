@@ -9,7 +9,7 @@ module.exports = function (table, columns) {
   var SQLGetStatement = "SELECT id, " + columns.join() + " FROM " + table + "";
   var SQLPostStatement = "INSERT INTO " + table + " (" + columns.join() + ") VALUES (" + questionMarks + ")";
   var SQLGetByIDStatement = "SELECT id, " + columns.join() + " FROM " + table + " WHERE id=(?)";
-  var SQLPutByIDStatement = "UPDATE " + table + " SET "+ columns.join("=(?)") + "=(?) WHERE id=(?)";
+  var SQLPutByIDStatement = "UPDATE " + table + " SET "+ columns.join("=(?), ") + "=(?) WHERE id=(?)";
   var SQLDeleteByIDStatement = "DELETE from " + table + " where id=(?)";
 
   router.get('/', function(req, res, next) {
@@ -21,11 +21,10 @@ module.exports = function (table, columns) {
 
   router.get('/columns', function(req, res, next) {
     var tempColumns = [];
-    tempColumns.push('ID');
+    tempColumns.push('id');
     columns.forEach(function(column){
       tempColumns.push(column);
     });
-    console.log(tempColumns);
     res.json(tempColumns);
   });
 
@@ -47,7 +46,11 @@ module.exports = function (table, columns) {
   });
 
   router.put('/:id', function(req, res, next) {
-    db.run(SQLPutByIDStatement, columns.map(function(column){return req.body[column]}), function(err) {
+    var columnData = columns.map(function(column){return req.body[column]});
+    columnData.push(req.params.id);
+
+    db.run(SQLPutByIDStatement, columnData, function(err) {
+    // console.log(SQLPutByIDStatement, columnData);
       if (err) {
         console.log(err);
         res.status(500).end();

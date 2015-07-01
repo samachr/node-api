@@ -18,8 +18,11 @@ db.run("CREATE TABLE IF NOT EXISTS user (id INTEGER PRIMARY KEY, username TEXT, 
 // db.run("CREATE TABLE IF NOT EXISTS transactions (id INTEGER PRIMARY KEY, userid INT, count INT, price REAL, timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)");
 // db.run("CREATE TABLE IF NOT EXISTS images (filename TEXT)");
 
-
 db.serialize(function() {
+
+  for (var i = 0; i < 100; i++) {
+      db.run("INSERT INTO users (name, taxrate) VALUES (?, ?)", "Bear User "+i, i * 5.5);
+  }
 
   db.run("INSERT INTO bears (name) VALUES (?)", "Kevin Murphy");
   db.run("INSERT INTO bears (name) VALUES (?)", "Care Bear");

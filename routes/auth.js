@@ -11,7 +11,7 @@ router.get('/', function(req, res) {
 });
 
 router.post('/', function(req, res) {
-  console.log(req.body);
+  // console.log(req.body);
   db.all("SELECT * FROM user WHERE username=(?) AND password=(?)", req.body.username, req.body.password, function(err, rows) {
       if (err || rows.length == 0) {
         console.log("Fail!");
@@ -22,7 +22,7 @@ router.post('/', function(req, res) {
         })
         console.log(err);
       } else {
-        console.log("Success?");
+        // console.log("Success?");
 
         var token = jwt.sign({
           username: req.body.username
