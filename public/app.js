@@ -31,7 +31,6 @@ app.controller('endpointsController', function($scope, $window, $http, $timeout)
       })
       $scope.selectedEndpoint = $scope.endpoints[data.endpoints[0]].url;
       $scope.getListing($scope.selectedEndpoint);
-      $scope.progress = 100;
     });
   });
 
@@ -41,7 +40,7 @@ app.controller('endpointsController', function($scope, $window, $http, $timeout)
     $scope.currentPage = 0;
     $http.get(endpoint + '/columns').
     success(function(data, status, headers, config) {
-      // $scope.progress += 40;
+      $scope.progress += 20;
       $scope.endpoints[endpoint].columns = [];
       data.forEach(function(data) {
           $scope.new[data] = "";
@@ -53,19 +52,19 @@ app.controller('endpointsController', function($scope, $window, $http, $timeout)
     success(function(data, status, headers, config) {
       $scope.endpoints[endpoint].data = [];
       data.forEach(function(data) {
-          $scope.progress += 90 / data.length;
+          $scope.progress += 70 / data.length;
           $scope.endpoints[endpoint].data.push(data);
         })
         // console.log($scope.endpoints[endpoint]);
     });
-    // $scope.progress = 100;
+    $scope.progress = 100;
   }
 
   $scope.postListing = function() {
     console.log($scope.new);
     $http.post($scope.selectedEndpoint, $scope.new).
     success(function(data, status, headers, config) {
-      console.log("posted! " + data);
+      // console.log("posted! " + data);
       $scope.getListing($scope.selectedEndpoint);
     });
   }
@@ -74,7 +73,7 @@ app.controller('endpointsController', function($scope, $window, $http, $timeout)
     console.log($scope.selectedEndpoint + "/" + row.id);
     $http.put($scope.selectedEndpoint + "/" + row.id, row).
     success(function(data, status, headers, config) {
-      console.log("posted! " + data);
+      // console.log("posted! " + data);
       $scope.getListing($scope.selectedEndpoint);
     });
   }
@@ -119,7 +118,11 @@ app.controller('endpointsController', function($scope, $window, $http, $timeout)
   };
 
   $scope.pageCount = function() {
-    return Math.ceil($scope.endpoints[$scope.selectedEndpoint].data.length / $scope.itemsPerPage) - 1;
+    if($scope.endpoints[$scope.selectedEndpoint])  {
+      return Math.ceil($scope.endpoints[$scope.selectedEndpoint].data.length / $scope.itemsPerPage) - 1;
+    } else {
+      return 0;
+    }
   };
 
   $scope.nextPage = function() {
@@ -153,6 +156,6 @@ app.directive('ngEnter', function() {
 app.filter('offset', function() {
   return function(input, start) {
     start = parseInt(start, 10);
-    return input.slice(start);
+    if(input) return input.slice(start);
   };
 });
