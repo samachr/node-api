@@ -11,7 +11,8 @@
 <body>
 
   <div ng-controller="endpointsController">
-    <progressbar value="progress"></progressbar>
+    <progressbar value="progress" ng-hide="progress >= 100"></progressbar>
+    
     <div class="form-inline text-center">
 
       <label for="apiselect">Endpoint:</label>
@@ -46,8 +47,8 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th ng-repeat="columnName in endpoints[selectedEndpoint].columns">
-            {{columnName}}
+          <th ng-repeat="(key, value) in endpoints[selectedEndpoint].data[0]">
+            {{key}}
           </th>
           <th>
 
@@ -63,8 +64,10 @@
             <button type="submit" ng-click="postListing()" class="btn btn-default">Add</button>
           </td>
         </tr>
+        <tr><td ng-repeat="(key, value) in endpoints[selectedEndpoint].data[0]">&nbsp</td></tr>
         <tr class="my-repeat-animation" ng-enter="putListing(row)" ng-repeat="row in endpoints[selectedEndpoint].data | filter:filterString | offset: currentPage*itemsPerPage | limitTo: itemsPerPage">
           <td ng-repeat="(key, value) in row">
+            {{key}}
             <input type="{{key}}" class="form-control" id="email" ng-model="row[key]">
           </td>
           <td>

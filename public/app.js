@@ -7,6 +7,7 @@ app.controller('endpointsController', function($scope, $window, $http, $timeout)
   $scope.webAuthToken = '';
   $scope.selectedEndpoint = "";
   $scope.progress = 10;
+  $scope.sizeOfStuff = 1;
   $scope.new = {};
 
   $scope.chartLabels = ["January", "February", "March", "April", "May", "June", "July"];
@@ -21,12 +22,12 @@ app.controller('endpointsController', function($scope, $window, $http, $timeout)
     password: 'd7b47bfa1e25cd2de6142522d486b2fb4c818598c090ccd4ef5c6ba415aa7846ca4da04decbdbf04'
   }).
   success(function(data, status, headers, config) {
-    $scope.progress += 20;
+    //$scope.progress += 20;
     //console.log(data);
     $scope.webAuthToken = data.token;
     $http.get('/api?token=' + $scope.webAuthToken).
     success(function(data, status, headers, config) {
-      $scope.progress += 50;
+      //$scope.progress += 50;
       //console.log(data.endpoints);
       data.endpoints.forEach(function(endpoint) {
         $scope.endpoints[endpoint] = {
@@ -38,6 +39,7 @@ app.controller('endpointsController', function($scope, $window, $http, $timeout)
       })
       $scope.selectedEndpoint = $scope.endpoints[data.endpoints[0]].url;
       $scope.getListing($scope.selectedEndpoint);
+
     });
   });
 
@@ -58,13 +60,15 @@ app.controller('endpointsController', function($scope, $window, $http, $timeout)
     $http.get(endpoint).
     success(function(data, status, headers, config) {
       $scope.endpoints[endpoint].data = [];
+      $scope.sizeOfStuff = data.length;
       data.forEach(function(data) {
-          $scope.progress += 70 / data.length;
+          $scope.progress += 80/ $scope.sizeOfStuff;
+          
           $scope.endpoints[endpoint].data.push(data);
         })
         // console.log($scope.endpoints[endpoint]);
     });
-    $scope.progress = 100;
+    
   }
 
   $scope.postListing = function() {
