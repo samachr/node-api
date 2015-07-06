@@ -19,73 +19,68 @@
       <select id="apiselect" class="form-control" ng-model="selectedEndpoint" ng-change="getListing(selectedEndpoint)">
         <option ng-repeat="endpoint in simpleEndpointsLising" value="{{endpoint}}">{{endpoint}}</option>
       </select>
-      <div class="form-group">
-        <ul class="pagination">
-          <li ng-class="prevPageDisabled()">
-            <a href ng-click="prevPage()">« Prev</a>
-          </li>
-          <li>
-            <a>Page {{currentPage + 1}} of {{pageCount() + 1}}</a>
-          </li>
-          <li ng-class="nextPageDisabled()">
-            <a href ng-click="nextPage()">Next »</a>
-          </li>
-        </ul>
-      </div>
+      
       <div class="form-group">
         <label for="search"> Search </label>
         <input id="search" type="text" class="search-query" ng-model="filterString" ng-change="currentPage=0">
       </div>
     </div>
     
+
     <div>
       <canvas id="line" class="chart chart-line" data="chartData"
         labels="chartLabels" legend="true" series="chartSeries">
       </canvas>
     </div>
 
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th ng-repeat="(key, value) in endpoints[selectedEndpoint].data[0]">
-            {{key}}
-          </th>
-          <th>
+    <div class="constrained">
+      <table class="table table-striped" infinite-scroll="loadMore()"   infinite-scroll-container='".constrained"'>
+        <thead>
+          <tr>
+            <th ng-repeat="(key, value) in endpoints[selectedEndpoint].data[0]">
+              {{key}}
+            </th>
+            <th>
 
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td ng-repeat="(key, value) in endpoints[selectedEndpoint].data[0]">
-            <input class="form-control" id="{{key}}" ng-model="new[key]">
-          </td>
-          <td>
-            <button type="submit" ng-click="postListing()" class="btn btn-default">Add</button>
-          </td>
-        </tr>
-        <tr><td ng-repeat="(key, value) in endpoints[selectedEndpoint].data[0]">&nbsp</td></tr>
-        <tr class="my-repeat-animation" ng-enter="putListing(row)" ng-repeat="row in endpoints[selectedEndpoint].data | filter:filterString | offset: currentPage*itemsPerPage | limitTo: itemsPerPage">
-          <td ng-repeat="(key, value) in row">
-            {{key}}
-            <input type="{{key}}" class="form-control" id="email" ng-model="row[key]">
-          </td>
-          <td>
-            <button type="submit" ng-click="putListing(row)" class="btn btn-default">Update</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td ng-repeat="(key, value) in endpoints[selectedEndpoint].data[0]">
+              <input class="form-control" id="{{key}}" ng-model="new[key]">
+            </td>
+            <td>
+              <button type="submit" ng-click="postListing()" class="btn btn-default">Add</button>
+            </td>
+          </tr>
+          <tr><td ng-repeat="(key, value) in endpoints[selectedEndpoint].data[0]">&nbsp</td></tr>
+          <tr class="my-repeat-animation" ng-enter="putListing(row)" ng-repeat="row in currentData | filter:filterString">
+            <td ng-repeat="(key, value) in row">
+              <input type="{{key}}" class="form-control" id="email" ng-model="row[key]">
+            </td>
+            <td>
+              <button type="submit" ng-click="putListing(row)" class="btn btn-default">Update</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <!-- // <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.13/angular.min.js"></script>
   // <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.13.0.min.js"></script>
   // <script src="http://code.angularjs.org/1.2.2/angular-animate.min.js"></script> -->
+  <script src='lib/jquery-2.1.1.min.js'></script>
   <script src="./lib/angular.min.js"></script>
+  <script src='lib/ng-infinite-scroll.min.js'></script>
   <script src="./lib/Chart.min.js"></script>
   <script src="./lib/ui-bootstrap-tpls-0.13.0.min.js"></script>
   <script src="./lib/angular-animate.min.js"></script>
   <script src="./lib/angular-chart.min.js"></script>
+  <script src="./lib/jquery-2.1.4.min.js"></script>
+    
+
   <script src="app.js"></script>
 </body>
 

@@ -1,9 +1,10 @@
-var app = angular.module('rest-browser', ['ui.bootstrap', 'ngAnimate']);
+var app = angular.module('rest-browser', ['ui.bootstrap', 'ngAnimate','infinite-scroll']);
 
 app.controller('endpointsController', function($scope, $window, $http, $timeout) {
   $scope.endpoints = [];
   $scope.responses = [];
   $scope.simpleEndpointsLising = [];
+  $scope.currentData = [];
   $scope.webAuthToken = '';
   $scope.selectedEndpoint = "";
   $scope.progress = 10;
@@ -44,6 +45,7 @@ app.controller('endpointsController', function($scope, $window, $http, $timeout)
   });
 
   $scope.getListing = function(endpoint) {
+    $scope.currentData = [];
     $scope.new = {};
     $scope.progress = 0;
     $scope.currentPage = 0;
@@ -67,6 +69,12 @@ app.controller('endpointsController', function($scope, $window, $http, $timeout)
           $scope.endpoints[endpoint].data.push(data);
         })
         // console.log($scope.endpoints[endpoint]);
+        for(var i=0; i<5; i++)
+        {
+          $scope.currentData.push($scope.endpoints[endpoint].data[i]);
+        }
+
+        $scope.loadMore();
     });
     
   }
@@ -146,7 +154,21 @@ app.controller('endpointsController', function($scope, $window, $http, $timeout)
     return $scope.currentPage === $scope.pageCount() ? "disabled" : "";
   };
 
+  $scope.loadMore = function () {
+    var end = $scope.currentData.length;
+
+    var howMuchToIncrement = ($scope.endpoints[$scope.selectedEndpoint].data.length-end) > 5 ? 5 : $scope.endpoints[$scope.selectedEndpoint].data.length-end;
+
+      for (var i = 0; i <howMuchToIncrement ; i++) {
+          
+          if($scope.selectedEndpoint != 'undefined' && $scope.endpoints[$scope.selectedEndpoint].data != 'undefined')
+            $scope.currentData.push($scope.endpoints[$scope.selectedEndpoint].data[i+end]);
+      };
+  }
+
 });
+
+
 
 /*
 This directive allows us to pass a function in on an enter key to do what we want.
