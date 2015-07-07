@@ -22,3 +22,4 @@ thanks to scotch.io for basic boilerplate
 npm start
 go to http://localhost:3000 in a browser
 default testing credentials are admin
+![login screen](login.PNG)
