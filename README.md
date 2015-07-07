@@ -16,7 +16,9 @@ thanks to scotch.io for basic boilerplate
 
 - Clone the repo: `git clone git@github.com:samachr/node-api.git`
 - Install dependencies: `npm install`
-- Start the server: `node server.js`
+- Start the server: `npm start` or `node server.js`
 
 ## Testing the API
-Test your API using [Postman](https://chrome.google.com/webstore/detail/postman-rest-client-packa/fhbjgbiflinjbdggehcddcbncdddomop)
+npm start
+go to http://localhost:3000 in a browser
+default testing credentials are admin
