@@ -1,12 +1,14 @@
-var app = angular.module('rest-browser', ['ui.bootstrap', 'ngAnimate']);
+var app = angular.module('rest-browser', ['ui.bootstrap', 'ngAnimate','infinite-scroll']);
 
 app.controller('endpointsController', function($scope, $window, $http, $timeout) {
   $scope.endpoints = [];
   $scope.responses = [];
   $scope.simpleEndpointsLising = [];
+  $scope.currentData = [];
   $scope.webAuthToken = '';
   $scope.selectedEndpoint = "";
   $scope.progress = 10;
+  $scope.sizeOfStuff = 1;
   $scope.new = {};
 
   $scope.chartLabels = ["January", "February", "March", "April", "May", "June", "July"];
@@ -21,12 +23,12 @@ app.controller('endpointsController', function($scope, $window, $http, $timeout)
     password: 'd7b47bfa1e25cd2de6142522d486b2fb4c818598c090ccd4ef5c6ba415aa7846ca4da04decbdbf04'
   }).
   success(function(data, status, headers, config) {
-    $scope.progress += 20;
+    //$scope.progress += 20;
     //console.log(data);
     $scope.webAuthToken = data.token;
     $http.get('/api?token=' + $scope.webAuthToken).
     success(function(data, status, headers, config) {
-      $scope.progress += 50;
+      //$scope.progress += 50;
       //console.log(data.endpoints);
       data.endpoints.forEach(function(endpoint) {
         $scope.endpoints[endpoint] = {
@@ -38,10 +40,12 @@ app.controller('endpointsController', function($scope, $window, $http, $timeout)
       })
       $scope.selectedEndpoint = $scope.endpoints[data.endpoints[0]].url;
       $scope.getListing($scope.selectedEndpoint);
+
     });
   });
 
   $scope.getListing = function(endpoint) {
+    $scope.currentData = [];
     $scope.new = {};
     $scope.progress = 0;
     $scope.currentPage = 0;
@@ -58,13 +62,21 @@ app.controller('endpointsController', function($scope, $window, $http, $timeout)
     $http.get(endpoint).
     success(function(data, status, headers, config) {
       $scope.endpoints[endpoint].data = [];
+      $scope.sizeOfStuff = data.length;
       data.forEach(function(data) {
-          $scope.progress += 70 / data.length;
+          $scope.progress += 80/ $scope.sizeOfStuff;
+          
           $scope.endpoints[endpoint].data.push(data);
         })
         // console.log($scope.endpoints[endpoint]);
+        for(var i=0; i<5; i++)
+        {
+          $scope.currentData.push($scope.endpoints[endpoint].data[i]);
+        }
+
+        $scope.loadMore();
     });
-    $scope.progress = 100;
+    
   }
 
   $scope.postListing = function() {
@@ -142,7 +154,21 @@ app.controller('endpointsController', function($scope, $window, $http, $timeout)
     return $scope.currentPage === $scope.pageCount() ? "disabled" : "";
   };
 
+  $scope.loadMore = function () {
+    var end = $scope.currentData.length;
+
+    var howMuchToIncrement = ($scope.endpoints[$scope.selectedEndpoint].data.length-end) > 5 ? 5 : $scope.endpoints[$scope.selectedEndpoint].data.length-end;
+
+      for (var i = 0; i <howMuchToIncrement ; i++) {
+          
+          if($scope.selectedEndpoint != 'undefined' && $scope.endpoints[$scope.selectedEndpoint].data != 'undefined')
+            $scope.currentData.push($scope.endpoints[$scope.selectedEndpoint].data[i+end]);
+      };
+  }
+
 });
+
+
 
 /*
 This directive allows us to pass a function in on an enter key to do what we want.
