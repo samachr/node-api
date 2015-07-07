@@ -19,7 +19,8 @@ thanks to scotch.io for basic boilerplate
 - Start the server: `npm start` or `node server.js`
 
 ## Testing the API
-npm start
-go to http://localhost:3000 in a browser
-default testing credentials are admin
+- npm start
+- go to http://localhost:3000 in a browser
+- default testing credentials are admin
 ![login screen](login.PNG)
+![main page](rest-browser.PNG)
