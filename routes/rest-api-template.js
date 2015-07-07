@@ -6,11 +6,15 @@ module.exports = function (table, columns) {
 
   var questionMarks = columns.map(function(){return "?"}).join(", ");
 
+  var SQLSchemaStatement = "CREATE TABLE IF NOT EXISTS " + table + " (id INTEGER PRIMARY KEY, " + columns.join(" TEXT, ") + " TEXT)";
+  // console.log(SQLSchemaStatement);
   var SQLGetStatement = "SELECT id, " + columns.join() + " FROM " + table + "";
   var SQLPostStatement = "INSERT INTO " + table + " (" + columns.join() + ") VALUES (" + questionMarks + ")";
   var SQLGetByIDStatement = "SELECT id, " + columns.join() + " FROM " + table + " WHERE id=(?)";
   var SQLPutByIDStatement = "UPDATE " + table + " SET "+ columns.join("=(?), ") + "=(?) WHERE id=(?)";
   var SQLDeleteByIDStatement = "DELETE from " + table + " where id=(?)";
+
+  db.run(SQLSchemaStatement);
 
   router.get('/', function(req, res, next) {
     db.all(SQLGetStatement, function(err, rows) {

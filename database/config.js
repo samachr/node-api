@@ -8,17 +8,17 @@ config.tables.push({
 
 config.tables.push({
   name: 'users',
-  columns : ['name','taxrate']
+  columns : ['username', 'password']
 });
 
-config.tables.push({
-	name: 'dropped',
-	columns:['username', 'lat', 'lon', 'timestamp','lat_r', 'lon_r', 'headline']
-});
-
-config.tables.push({
-	name: 'user',
-	columns:['username', 'password', 'name', 'email', 'mobile', 'join_date', 'reputation']
-});
+// config.tables.push({
+// 	name: 'dropped',
+// 	columns:['username', 'lat', 'lon', 'timestamp','lat_r', 'lon_r', 'headline']
+// });
+//
+// config.tables.push({
+// 	name: 'user',
+// 	columns:['username', 'password', 'name', 'email', 'mobile', 'join_date', 'reputation']
+// });
 
 module.exports = config;

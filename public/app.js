@@ -1,79 +1,78 @@
 var app = angular.module('rest-browser', ['ui.bootstrap', 'ngAnimate']);
 
-app.controller('endpointsController', function($scope, $window, $http, $timeout) {
+app.controller('endpointsController', function($scope, $window, $http, $timeout, $modal) {
+    $scope.items = ['item1', 'item2', 'item3'];
+
+  var modalInstance = $modal.open({
+    animation: false,
+    templateUrl: 'myModalContent.html',
+    controller: 'ModalInstanceCtrl',
+    backdrop: "static"
+  });
+
+  modalInstance.result.then(function (token) {
+    // console.log(token);
+    $scope.progress += 20;
+      $scope.webAuthToken = token;
+      $http.get('/api?token=' + $scope.webAuthToken).
+      success(function(data, status, headers, config) {
+        $scope.progress += 50;
+        data.endpoints.forEach(function(endpoint) {
+          $scope.endpoints[endpoint] = {
+            url: endpoint,
+            data: []
+          };
+          $scope.simpleEndpointsLising.push(endpoint);
+        })
+        $scope.selectedEndpoint = $scope.endpoints[data.endpoints[0]].url;
+        $scope.getListing($scope.selectedEndpoint);
+      });
+  });
+
+
   $scope.endpoints = [];
   $scope.responses = [];
   $scope.simpleEndpointsLising = [];
   $scope.webAuthToken = '';
   $scope.selectedEndpoint = "";
-  $scope.progress = 10;
   $scope.new = {};
-
-  $http.post('/api/auth', {
-    username: 'kyle',
-    password: 'd7b47bfa1e25cd2de6142522d486b2fb4c818598c090ccd4ef5c6ba415aa7846ca4da04decbdbf04'
-  }).
-  success(function(data, status, headers, config) {
-    $scope.progress += 20;
-    //console.log(data);
-    $scope.webAuthToken = data.token;
-    $http.get('/api?token=' + $scope.webAuthToken).
-    success(function(data, status, headers, config) {
-      $scope.progress += 50;
-      //console.log(data.endpoints);
-      data.endpoints.forEach(function(endpoint) {
-        $scope.endpoints[endpoint] = {
-          url: endpoint,
-          data: []
-        };
-        $scope.simpleEndpointsLising.push(endpoint);
-        //console.log($scope.selectedEndpoint);
-      })
-      $scope.selectedEndpoint = $scope.endpoints[data.endpoints[0]].url;
-      $scope.getListing($scope.selectedEndpoint);
-    });
-  });
 
   $scope.getListing = function(endpoint) {
     $scope.new = {};
     $scope.progress = 0;
     $scope.currentPage = 0;
-    $http.get(endpoint + '/columns').
-    success(function(data, status, headers, config) {
-      $scope.progress += 20;
-      $scope.endpoints[endpoint].columns = [];
-      data.forEach(function(data) {
-          $scope.new[data] = "";
-          $scope.endpoints[endpoint].columns.push(data);
-        })
-        // console.log($scope.endpoints[endpoint]);
-    });
+    // $http.get(endpoint + '/columns').
+    // success(function(data, status, headers, config) {
+    //   $scope.progress += 20;
+    //   $scope.endpoints[endpoint].columns = [];
+    //   data.forEach(function(data) {
+    //     $scope.new[data] = "";
+    //     $scope.endpoints[endpoint].columns.push(data);
+    //   })
+    // });
     $http.get(endpoint).
     success(function(data, status, headers, config) {
       $scope.endpoints[endpoint].data = [];
       data.forEach(function(data) {
-          $scope.progress += 70 / data.length;
-          $scope.endpoints[endpoint].data.push(data);
-        })
-        // console.log($scope.endpoints[endpoint]);
+        $scope.progress += 70 / data.length;
+        $scope.endpoints[endpoint].data.push(data);
+      })
     });
     $scope.progress = 100;
   }
 
   $scope.postListing = function() {
-    console.log($scope.new);
+    // console.log($scope.new);
     $http.post($scope.selectedEndpoint, $scope.new).
     success(function(data, status, headers, config) {
-      // console.log("posted! " + data);
       $scope.getListing($scope.selectedEndpoint);
     });
   }
 
   $scope.putListing = function(row) {
-    console.log($scope.selectedEndpoint + "/" + row.id);
+    // console.log($scope.selectedEndpoint + "/" + row.id);
     $http.put($scope.selectedEndpoint + "/" + row.id, row).
     success(function(data, status, headers, config) {
-      // console.log("posted! " + data);
       $scope.getListing($scope.selectedEndpoint);
     });
   }
@@ -81,30 +80,20 @@ app.controller('endpointsController', function($scope, $window, $http, $timeout)
   $scope.itemsPerPage = 10;
   $scope.currentPage = 0;
 
-  // $scope.items = [];
-  //
-  // for (var i = 0; i < 50; i++) {
-  //   $scope.items.push({
-  //     id: i,
-  //     name: "name " + i,
-  //     description: "description " + i
-  //   });
-  // }
-
   $scope.range = function() {
     var rangeSize = 5;
-    var ret = [];
+    var range = [];
     var start;
 
     start = $scope.currentPage;
-    if ( start > $scope.pageCount()-rangeSize ) {
-      start = $scope.pageCount()-rangeSize+1;
+    if (start > $scope.pageCount() - rangeSize) {
+      start = $scope.pageCount() - rangeSize + 1;
     }
 
-    for (var i=start; i<start+rangeSize; i++) {
-      ret.push(i);
+    for (var i = start; i < start + rangeSize; i++) {
+      range.push(i);
     }
-    return ret;
+    return range;
   };
 
   $scope.prevPage = function() {
@@ -118,7 +107,7 @@ app.controller('endpointsController', function($scope, $window, $http, $timeout)
   };
 
   $scope.pageCount = function() {
-    if($scope.endpoints[$scope.selectedEndpoint])  {
+    if ($scope.endpoints[$scope.selectedEndpoint]) {
       return Math.ceil($scope.endpoints[$scope.selectedEndpoint].data.length / $scope.itemsPerPage) - 1;
     } else {
       return 0;
@@ -134,12 +123,15 @@ app.controller('endpointsController', function($scope, $window, $http, $timeout)
   $scope.nextPageDisabled = function() {
     return $scope.currentPage === $scope.pageCount() ? "disabled" : "";
   };
-
 });
 
-/*
-This directive allows us to pass a function in on an enter key to do what we want.
- */
+app.filter('offset', function() {
+  return function(input, start) {
+    start = parseInt(start, 10);
+    if (input) return input.slice(start);
+  };
+});
+
 app.directive('ngEnter', function() {
   return function(scope, element, attrs) {
     element.bind("keydown keypress", function(event) {
@@ -153,9 +145,22 @@ app.directive('ngEnter', function() {
   };
 });
 
-app.filter('offset', function() {
-  return function(input, start) {
-    start = parseInt(start, 10);
-    if(input) return input.slice(start);
+app.controller('ModalInstanceCtrl', function ($scope, $modalInstance, $http) {
+  $scope.message = "Sign in";
+  $scope.username = "";
+  $scope.password = "";
+
+  $scope.login = function () {
+    // console.log($scope.username, $scope.password);
+    $http.post('/api/auth', {
+      username: $scope.username,
+      password: $scope.password
+    }).
+    success(function(data, status, headers, config) {
+      $modalInstance.close(data.token);
+    }).
+    error(function(data, status, headers, config) {
+      $scope.message = "Invalid username or password";
+    });
   };
 });

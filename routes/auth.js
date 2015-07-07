@@ -12,7 +12,7 @@ router.get('/', function(req, res) {
 
 router.post('/', function(req, res) {
   // console.log(req.body);
-  db.all("SELECT * FROM user WHERE username=(?) AND password=(?)", req.body.username, req.body.password, function(err, rows) {
+  db.all("SELECT * FROM users WHERE username=(?) AND password=(?)", req.body.username, req.body.password, function(err, rows) {
       if (err || rows.length == 0) {
         console.log("Fail!");
         res.status(401);

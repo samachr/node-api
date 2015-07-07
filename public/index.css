@@ -10,3 +10,4 @@
 .my-repeat-animation.ng-enter.ng-enter-active {
   opacity:1;
 }
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
