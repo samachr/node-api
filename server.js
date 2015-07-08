@@ -22,6 +22,13 @@ app.use(bodyParser.json());
 var db = require('./database/db.js');
 var dbconfig = require('./database/config.js');
 
+db.all("SELECT * FROM users WHERE username=(?) AND password=(?)", config.adminuser, config.adminpassword, function(err, rows) {
+  if (rows.length == 0) {
+    db.run("INSERT INTO users (name, password) VALUES (?, ?)", config.adminuser, config.adminpassword)
+  }
+});
+
+
 // ROUTES FOR OUR API
 // =============================================================================
 app.set('jwtkey', config.secret);
@@ -89,6 +96,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 var port = process.env.OPENSHIFT_NODEJS_PORT || 3000;
 var ipaddress = process.env.OPENSHIFT_NODEJS_IP || "127.0.0.1";
 
-app.listen(port, ipaddress, function(){
+app.listen(port, ipaddress, function() {
   console.log('Magic happens on port ' + port);
 });
