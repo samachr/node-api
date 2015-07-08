@@ -23,7 +23,7 @@ var db = require('./database/db.js');
 var dbconfig = require('./database/config.js');
 
 db.all("SELECT * FROM users WHERE username=(?) AND password=(?)", config.adminuser, config.adminpassword, function(err, rows) {
-  if (rows.length == 0) {
+  if (rows) {
     db.run("INSERT INTO users (name, password) VALUES (?, ?)", config.adminuser, config.adminpassword)
   }
 });
