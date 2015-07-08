@@ -22,13 +22,6 @@ app.use(bodyParser.json());
 var db = require('./database/db.js');
 var dbconfig = require('./database/config.js');
 
-db.all("SELECT * FROM users WHERE username=(?) AND password=(?)", config.adminuser, config.adminpassword, function(err, rows) {
-  if (!err && rows.length == 0) {
-    db.run("INSERT INTO users (name, password) VALUES (?, ?)", config.adminuser, config.adminpassword)
-  }
-});
-
-
 // ROUTES FOR OUR API
 // =============================================================================
 app.set('jwtkey', config.secret);
@@ -76,6 +69,12 @@ dbconfig.tables.forEach(function(table) {
   app.use('/api/' + table.name, require('./routes/rest-api-template.js')(table.name, table.columns));
 });
 
+//make sure we have an admin user
+db.all("SELECT * FROM users WHERE username=(?) AND password=(?)", config.adminuser, config.adminpassword, function(err, rows) {
+  if (!err && rows.length == 0) {
+    db.run("INSERT INTO users (name, password) VALUES (?, ?)", config.adminuser, config.adminpassword)
+  }
+});
 
 router.get('/', function(req, res) {
   res.json({
