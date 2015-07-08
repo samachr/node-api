@@ -72,7 +72,7 @@ dbconfig.tables.forEach(function(table) {
 //make sure we have an admin user
 db.all("SELECT * FROM users WHERE username=(?) AND password=(?)", config.adminuser, config.adminpassword, function(err, rows) {
   if (!err && rows.length == 0) {
-    db.run("INSERT INTO users (name, password) VALUES (?, ?)", config.adminuser, config.adminpassword)
+    db.run("INSERT INTO users (username, password) VALUES (?, ?)", config.adminuser, config.adminpassword)
   }
 });
 
